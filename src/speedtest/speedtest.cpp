@@ -136,6 +136,7 @@ void SpeedTest::serversChanged()
 void SpeedTest::sortsChanged()
 {
     STServerSorterItem item = findBestServer();
+    Q_EMIT selectedServer(item.sponsor(), item.name(), item.distance(), item.latency());
     setStatusString( QString(QStringLiteral("Selected server: %1 (%2) [%3km]: %4ms")).arg(item.sponsor()).arg(item.name())
                      .arg(item.distance()).arg(item.latency()));
 
@@ -148,7 +149,9 @@ void SpeedTest::sortsChanged()
 void SpeedTest::downloadFinished()
 {
     STServerSorterItem item = bestServerItem();
-    setStatusString( QString(QStringLiteral("Download Speed: %1kbps")).arg( 8*p->downloader->downloadBytes()/p->downloader->downloadTime() ));
+    const qreal speedKbps = 8*p->downloader->downloadBytes()/p->downloader->downloadTime();
+    Q_EMIT finishedDownload(speedKbps);
+    setStatusString( QString(QStringLiteral("Download Speed: %1kbps")).arg(speedKbps));
     setStatus(Uploading);
     setStatusString(QStringLiteral("Uploading..."));
     p->uploader->start(item, p->client->uploadConfig().testLength()*1000,
@@ -157,10 +160,11 @@ void SpeedTest::downloadFinished()
 
 void SpeedTest::uploadFinished()
 {
-    setStatusString( QString(QStringLiteral("Upload Speed: %1kbps")).arg( 8*p->uploader->uploadBytes()/p->uploader->uploadTime() ));
+    const qreal speedKbps = 8*p->uploader->uploadBytes()/p->uploader->uploadTime();
+    Q_EMIT finishedUpload(speedKbps);
+    setStatusString( QString(QStringLiteral("Upload Speed: %1kbps")).arg(speedKbps));
     setStatus(FinishedStatus);
     setStatusString(QStringLiteral("Finished"));
-
 }
 
 void SpeedTest::clientError()

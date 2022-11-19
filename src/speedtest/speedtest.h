@@ -111,6 +111,10 @@ Q_SIGNALS:
     void statusStringChanged();
     void fakeSignal();
 
+    void selectedServer(const QString &sponsor, const QString &server, const qreal distanceKm, const qint32 latency);
+    void finishedDownload(qreal speedKbps);
+    void finishedUpload(qreal speedKbps);
+
     void finished();
 
 public Q_SLOTS:

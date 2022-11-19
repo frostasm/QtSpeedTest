@@ -150,6 +150,9 @@ void STClient::fetch()
             return;
         }
 
+        // NOTE: print speed test xml config
+//        qDebug().noquote() << "speed test xml config:" << Qt::endl << QString::fromUtf8(data);
+
         QDomDocument doc;
         QString errorMsg;
         if (!doc.setContent(data, &errorMsg))
